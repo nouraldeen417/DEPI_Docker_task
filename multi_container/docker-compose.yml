@@ -1,0 +1,43 @@
+version: '3'
+services:
+  nginx:
+    image: nginx-test
+    container_name: web_app
+    restart: always
+    networks:
+      - net_01
+    ports:
+      - 8000:8080  
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+  
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres_db
+    restart: always
+    networks:
+      - net_01
+    ports:
+      - 5432:5432
+    volumes:
+      - PostgreSQL_Vol:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_USER=root
+      - POSTGRES_DB=citizix_db
+
+
+
+networks:
+  net_01:
+    driver: bridge
+    ipam: 
+      config:
+        - subnet: 10.0.0.0/24
+
+volumes:
+   PostgreSQL_Vol:
